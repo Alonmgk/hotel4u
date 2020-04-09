@@ -35,6 +35,7 @@ class _ReviewListTileState extends State<ReviewListTile> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        
         Row(
           children: <Widget>[
             InkResponse(
