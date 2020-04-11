@@ -137,4 +137,14 @@ class Message {
     return monthName + "/" + day;
   }
 
+
+  String _getDateTime(){
+    String datetime = dateTime.toIso8601String().substring(5, 10);
+    String hours = datetime.substring(0,2);
+    int hoursInt = int.parse(hours);
+
+
+
+  }
+
 }

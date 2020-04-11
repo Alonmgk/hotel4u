@@ -5,18 +5,29 @@ import 'package:hotel_hunter/Models/data.dart';
 import 'package:hotel_hunter/Models/userObjects.dart';
 import 'guestHomePage.dart';
 import 'signUpPage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'forgotpassword.dart';
+
+
+enum AuthFormType { signIn, signUp, reset }
 
 class LoginPage extends StatefulWidget {
 
+  final AuthFormType authFormType;
+
+
   static final String routeName = '/loginPageRoute';
 
-  LoginPage({Key key}) : super(key: key);
+  LoginPage({Key key,@required this.authFormType}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  AuthFormType authFormType;
+
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
@@ -33,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _login() {
+  void _login() async{
     if (_formKey.currentState.validate()) {
       String email = _emailController.text;
       String password = _passwordController.text;
@@ -41,14 +52,24 @@ class _LoginPageState extends State<LoginPage> {
         email: email,
         password: password,
       ).then((firebaseUser) {
-        String userID = firebaseUser.uid;
+        String userID = firebaseUser.user.uid;
         AppConstants.currentUser = User(id: userID);
         AppConstants.currentUser.getPersonalInfoFromFirestore().whenComplete(() {
           Navigator.pushNamed(context, GuestHomePage.routeName);
         });
+
+      }).catchError((e){
+        Fluttertoast.showToast(msg: "Email-id Not Exist Or Incorrect Password",);
+
+        print(e.details);
       });
     }
+
   }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +175,16 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+
+                GestureDetector(onTap:(){
+                  Navigator.pushNamed(context, Forgotpassword.routeName);
+
+                },child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Container(child: Text("Forgot Password",style: TextStyle(
+                    fontSize: 16
+                  ),)),
+                ))
               ],
             ),
           ),
@@ -161,4 +192,5 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
 }

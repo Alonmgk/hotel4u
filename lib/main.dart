@@ -13,7 +13,7 @@ import 'Screens/loginPage.dart';
 import 'Screens/personalInfoPage.dart';
 import 'Screens/signUpPage.dart';
 import 'Screens/viewProfilePage.dart';
-
+import 'Screens/forgotpassword.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
         ConversationPage.routeName: (context) => ConversationPage(),
         HostHomePage.routeName: (context) => HostHomePage(),
         CreatePostingPage.routeName: (context) => CreatePostingPage(),
+        Forgotpassword.routeName: (context) => Forgotpassword(),
       },
     );
   }

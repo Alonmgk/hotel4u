@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_hunter/Models/appConstants.dart';
@@ -45,7 +45,7 @@ class _SignUpPageState extends State<SignUpPage> {
       email: AppConstants.currentUser.email,
       password: AppConstants.currentUser.password,
     ).then((firebaseUser) {
-      String userID = firebaseUser.uid;
+      String userID = firebaseUser.user.uid;
       AppConstants.currentUser.id = userID;
       AppConstants.currentUser.firstName = _firstNameController.text.toString();
       AppConstants.currentUser.lastName = _lastNameController.text.toString();
@@ -62,6 +62,10 @@ class _SignUpPageState extends State<SignUpPage> {
           });
         });
       });
+    }).catchError((e){
+      Fluttertoast.showToast(msg: "Email-id Already Exist");
+
+      print(e.details);
     });
   }
 

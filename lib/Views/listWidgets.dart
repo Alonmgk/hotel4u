@@ -77,13 +77,28 @@ class _ReviewListTileState extends State<ReviewListTile> {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
-          child: AutoSizeText(
-            _review.text,
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
+          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+          child: Row(
+            children: <Widget>[
+              AutoSizeText(
+                _review.dateTime.toString(),
+                style: TextStyle(
+                  fontSize: 14.0,
+                ),
+              ),
+            ],
           ),
+        ),
+
+        Row(
+          children: <Widget>[
+            AutoSizeText(
+              _review.text,
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -199,7 +214,8 @@ class MessageListTile extends StatelessWidget {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          message.getMessageDateTime(),
+                          message.dateTime.toString(),
+                          //message.getMessageDateTime(),
                           style: TextStyle(
                             fontSize: 15.0,
                           ),
@@ -274,7 +290,9 @@ class MessageListTile extends StatelessWidget {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          message.getMessageDateTime(),
+                          message.dateTime.toString(),
+
+                          //message.getMessageDateTime(),
                           style: TextStyle(
                             fontSize: 15.0,
                           ),
