@@ -12,9 +12,15 @@ import 'package:hotel_hunter/Views/formWidgets.dart';
 import 'package:hotel_hunter/Views/listWidgets.dart';
 import 'package:hotel_hunter/Views/textWidgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:location/location.dart' as LocationManager;
+import 'package:location/location.dart';
 
 import 'bookPostingPage.dart';
 import 'guestHomePage.dart';
+
+
+const kGoogleApiKey = "AIzaSyBuYqQLpLtYOUE0xu1ZNuPSVhl-bQzIZUA";
 
 class ViewPostingPage extends StatefulWidget {
 
@@ -29,16 +35,24 @@ class ViewPostingPage extends StatefulWidget {
 
 class _ViewPostingPageState extends State<ViewPostingPage> {
 
+
+  final Location location = Location();
+
+  bool loading = true;
+
   Posting _posting;
-  LatLng _centerLatLong = LatLng(49.2827, -123.1207);
+  LatLng _centerLatLong;
   Completer<GoogleMapController> _completer;
 
-  void _calculateLatAndLng() {
-    _centerLatLong = LatLng(49.2827, -123.1207);
-    Geolocator().placemarkFromAddress(_posting.getFullAddress()).then((placemarks) {
+  Future _calculateLatAndLng() async{
+    //_centerLatLong = LatLng(23.022505, 72.571365);
+   await Geolocator().placemarkFromAddress(_posting.getFullAddress()).then((placemarks) {
       placemarks.forEach((placemark) {
         setState(() {
           _centerLatLong = LatLng(placemark.position.latitude, placemark.position.longitude);
+          loading = false;
+
+
         });
       });
     });
@@ -53,6 +67,8 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
     this._posting.getHostFromFirestore().whenComplete(() {
       setState(() {});
     });
+    loading = true;
+
     _completer = Completer();
     _calculateLatAndLng();
 
@@ -262,11 +278,12 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.only(bottom: 25.0),
                     child: Container(
                       height: MediaQuery.of(context).size.height / 3,
-                      child: GoogleMap(
+                      child: loading==false?GoogleMap(
                         onMapCreated: (controller) {
                           _completer.complete(controller);
                         },
@@ -282,7 +299,7 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
                             icon: BitmapDescriptor.defaultMarker,
                           ),
                         },
-                      ),
+                      ):CircularProgressIndicator()
                     ),
                   ),
                   Text(

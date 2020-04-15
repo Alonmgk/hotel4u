@@ -6,6 +6,7 @@ import 'package:hotel_hunter/Models/appConstants.dart';
 import 'package:hotel_hunter/Views/textWidgets.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../Loading.dart';
 import 'guestHomePage.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -26,10 +27,12 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _cityController = TextEditingController();
   TextEditingController _countryController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
+  TextEditingController _stateController = TextEditingController();
+
 
   File _imageFile;
 
-  void _chooseImage() async {
+  Future _chooseImage() async {
     var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (imageFile != null) {
       _imageFile = imageFile;
@@ -37,9 +40,12 @@ class _SignUpPageState extends State<SignUpPage> {
         _imageFile=imageFile;
       });
     }
+
   }
 
   void _signUp() {
+    //if (!_formKey.currentState.validate()) { return; }
+
     if (!_formKey.currentState.validate() || this._imageFile == null) { return; }
     FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: AppConstants.currentUser.email,
@@ -52,20 +58,24 @@ class _SignUpPageState extends State<SignUpPage> {
       AppConstants.currentUser.city = _cityController.text.toString();
       AppConstants.currentUser.country = _countryController.text.toString();
       AppConstants.currentUser.bio = _bioController.text.toString();
+      AppConstants.currentUser.state= _stateController.text.toString();
       AppConstants.currentUser.addUserToFirestore().whenComplete(() {
+        Dialogs.showLoadingDialog(context);
+
         AppConstants.currentUser.addImageToFirestore(_imageFile).whenComplete(() {
           FirebaseAuth.instance.signInWithEmailAndPassword(
             email: AppConstants.currentUser.email,
             password: AppConstants.currentUser.password,
           ).whenComplete(() {
+
             Navigator.pushNamed(context, GuestHomePage.routeName);
           });
         });
       });
     }).catchError((e){
-      Fluttertoast.showToast(msg: "Email-id Already Exist");
+      Fluttertoast.showToast(msg: "Email-id Already Exist",);
 
-      print(e.details);
+
     });
   }
 
@@ -131,25 +141,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           textCapitalization: TextCapitalization.words,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              labelText: 'City'
-                          ),
-                          style: TextStyle(
-                            fontSize: 25.0,
-                          ),
-                          controller: _cityController,
-                          validator: (text) {
-                            if (text.isEmpty) {
-                              return "Please enter a valid city";
-                            }
-                            return null;
-                          },
-                          textCapitalization: TextCapitalization.words,
-                        ),
-                      ),
+
                       Padding(
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
@@ -169,8 +161,48 @@ class _SignUpPageState extends State<SignUpPage> {
                           textCapitalization: TextCapitalization.words,
                         ),
                       ),
+                      _countryController.text=="United States" ||
+                      _countryController.text=="US"?
                       Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'State'
+                          ),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                          controller: _stateController,
+                          validator: (text) {
+                            if (text.isEmpty) {
+                              return "Please enter a valid State";
+                            }
+                            return null;
+                          },
+                          textCapitalization: TextCapitalization.words,
+                        ),
+                      ):Text(""),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'City'
+                          ),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                          controller: _cityController,
+                          validator: (text) {
+                            if (text.isEmpty) {
+                              return "Please enter a valid city";
+                            }
+                            return null;
+                          },
+                          textCapitalization: TextCapitalization.words,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
                         child: TextFormField(
                           decoration: InputDecoration(
                               labelText: 'Bio'
@@ -204,6 +236,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   padding: const EdgeInsets.only(top: 40.0, bottom: 40.0),
                   child: MaterialButton(
                     onPressed: () {
+                      _imageFile==null?Fluttertoast.showToast(msg: "Please Upload Profile Image"):
                       _signUp();
                     },
                     child: Text(

@@ -3,7 +3,7 @@ import 'package:hotel_hunter/Models/appConstants.dart';
 import 'package:hotel_hunter/Models/postingObjects.dart';
 import 'package:hotel_hunter/Views/textWidgets.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'hostHomePage.dart';
 import 'myPostingsPage.dart';
 
@@ -28,13 +28,14 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
     'Townhouse',
   ];
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _nameController;
-  TextEditingController _priceController;
-  TextEditingController _descriptionController;
-  TextEditingController _addressController;
-  TextEditingController _cityController;
-  TextEditingController _countryController;
-  TextEditingController _amenitiesController;
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
+  TextEditingController _cityController = TextEditingController();
+  TextEditingController _countryController = TextEditingController();
+  TextEditingController _amenitiesController = TextEditingController();
+  TextEditingController _stateController = TextEditingController();
 
   String _houseType;
   Map<String, int> _beds;
@@ -65,7 +66,8 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
     posting.description = _descriptionController.text;
     posting.address = _addressController.text;
     posting.city = _cityController.text;
-    posting.country = _countryController.text;
+    posting.state = _stateController.text.toString();
+    posting.country = _countryController.text.toString();
     posting.amenities = _amenitiesController.text.split(",");
     posting.type = _houseType;
     posting.beds = _beds;
@@ -115,6 +117,7 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
       _addressController = TextEditingController();
       _cityController = TextEditingController();
       _countryController = TextEditingController();
+      _stateController =TextEditingController();
       _amenitiesController = TextEditingController();
       _beds = {
         'small': 0,
@@ -132,6 +135,7 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
       _descriptionController = TextEditingController(text: widget.posting.description);
       _addressController = TextEditingController(text: widget.posting.address);
       _cityController = TextEditingController(text: widget.posting.city);
+      _stateController =TextEditingController(text: widget.posting.state);
       _countryController = TextEditingController(text: widget.posting.country);
       _amenitiesController = TextEditingController(text: widget.posting.getAmenitiesString());
       _beds = widget.posting.beds;
@@ -139,13 +143,18 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
       _images = widget.posting.displayImages;
       _houseType = widget.posting.type;
     }
-    setState(() {});
+    setState(() {
+
+    });
   }
 
   @override
   void initState() {
     _setUpInitialValues();
     super.initState();
+    setState(() {
+
+    });
   }
 
   @override
@@ -160,7 +169,7 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
           ),
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: _savePosting,
+            onPressed:_savePosting,
 
           ),
         ],
@@ -310,6 +319,46 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
                           decoration: InputDecoration(
+                              labelText: 'Country'
+                          ),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                          controller: _countryController,
+                          validator: (text) {
+                            if (text.isEmpty) {
+                              return "Please enter a valid country";
+                            }
+                            return null;
+                          },
+                          textCapitalization: TextCapitalization.words,
+                        ),
+                      ),
+                      _countryController.text=="United States" ||
+                          _countryController.text=="US"?
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'State'
+                          ),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                          controller: _stateController,
+                          validator: (text) {
+                            if (text.isEmpty) {
+                              return "Please enter a valid State";
+                            }
+                            return null;
+                          },
+                          textCapitalization: TextCapitalization.words,
+                        ),
+                      ):Text(""),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
                               labelText: 'City'
                           ),
                           style: TextStyle(
@@ -319,24 +368,6 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
                           validator: (text) {
                             if (text.isEmpty) {
                               return "Please enter a city.";
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              labelText: 'Country'
-                          ),
-                          style: TextStyle(
-                            fontSize: 25.0,
-                          ),
-                          controller: _countryController,
-                          validator: (text) {
-                            if (text.isEmpty) {
-                              return "Please enter a country.";
                             }
                             return null;
                           },

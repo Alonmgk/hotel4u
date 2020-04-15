@@ -90,7 +90,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: AutoSizeText(
+                child: Text(
                   _user.bio,
                   style: TextStyle(
                     fontSize: 20.0,
@@ -111,14 +111,13 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.home),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child: AutoSizeText(
-                        'Lives in ${_user.city}, ${_user.country}',
+                    Expanded(flex:1,child: Icon(Icons.home)),
+                    Expanded(flex:7,
+                      child: Text(
+                        "Lives in ${_user.city}, ${_user.state}, ${_user.country},",
                         style: TextStyle(
-                          fontSize: 20.0,
-                        ),
+                          fontSize: 18.0,
+                        ),maxLines: 4,
                       ),
                     ),
                   ],

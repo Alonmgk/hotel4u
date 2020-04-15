@@ -26,6 +26,8 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   TextEditingController _cityController;
   TextEditingController _countryController;
   TextEditingController _bioController;
+  TextEditingController _stateController;
+
 
   File _newImageFile;
 
@@ -44,6 +46,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     AppConstants.currentUser.city = _cityController.text;
     AppConstants.currentUser.country = _countryController.text;
     AppConstants.currentUser.bio = _bioController.text;
+    AppConstants.currentUser.state = _stateController.text;
     AppConstants.currentUser.updateUserInFirestore().whenComplete(() {
       if (_newImageFile != null) {
         AppConstants.currentUser.addImageToFirestore(_newImageFile).whenComplete(() {
@@ -63,7 +66,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     _cityController = TextEditingController(text: AppConstants.currentUser.city);
     _countryController = TextEditingController(text: AppConstants.currentUser.country);
     _bioController = TextEditingController(text: AppConstants.currentUser.bio);
-
+    _stateController = TextEditingController(text: AppConstants.currentUser.state);
     super.initState();
   }
 
@@ -179,6 +182,27 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                           textCapitalization: TextCapitalization.words,
                         ),
                       ),
+                      _countryController.text=="United States" ||
+                          _countryController.text=="US"?
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'State'
+                          ),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                          controller: _stateController,
+                          validator: (text) {
+                            if(text.isEmpty) {
+                              return "Please enter a valid state.";
+                            }
+                            return null;
+                          },
+                          textCapitalization: TextCapitalization.words,
+                        ),
+                      ):Text(""),
                       Padding(
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(

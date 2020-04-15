@@ -6,7 +6,7 @@ import 'accountPage.dart';
 import 'bookingsPage.dart';
 import 'inboxPage.dart';
 import 'myPostingsPage.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class HostHomePage extends StatefulWidget {
 
   static final String routeName = '/hostHomePageRoute';
@@ -20,7 +20,11 @@ class HostHomePage extends StatefulWidget {
 
 class _HostHomePageState extends State<HostHomePage> {
 
-  int _selectedIndex = 3;
+  bool loggedIn = false;
+
+
+
+int _selectedIndex = 3;
 
   final List<String> _pageTitles = [
     'Bookings',

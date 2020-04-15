@@ -1,11 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hotel_hunter/Models/appConstants.dart';
 import 'package:hotel_hunter/Models/messagingObjects.dart';
 import 'package:hotel_hunter/Models/postingObjects.dart';
 import 'package:hotel_hunter/Models/reviewObjects.dart';
+import 'package:hotel_hunter/Screens/guestHomePage.dart';
+import 'package:hotel_hunter/Screens/hostHomePage.dart';
+import 'package:hotel_hunter/Screens/myPostingsPage.dart';
 import 'package:hotel_hunter/Screens/viewProfilePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReviewListTile extends StatefulWidget {
 
@@ -314,6 +320,7 @@ class MessageListTile extends StatelessWidget {
 class MyPostingListTile extends StatefulWidget {
 
   final Posting posting;
+  static final String routeName = '/mypostinglisttile';
 
   MyPostingListTile({this.posting, Key key}): super(key: key);
 
@@ -326,6 +333,67 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
 
   Posting _posting;
 
+  void showDialog1(BuildContext context,String id) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Delete"),
+          content: new Text("Are you sure want to delete the selected Posting?"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: 50
+                    ),
+                    child: GestureDetector(
+                        onTap: (){
+                          Navigator.of(context).pop();
+                        },child: new Text("Cancel")),
+
+                  ),
+
+                  GestureDetector(
+                      onTap: ()async{
+
+                        AppConstants.currentUser.getPersonalInfoFromFirestore()
+                            .whenComplete(() {
+
+                          Navigator.pushNamed(context, GuestHomePage.routeName);
+                        });
+                        //print(AppConstants.currentUser.getMyPostingsFromFirestore());
+                        //Navigator.pushNamed(context, MyPostingsPage.routeName);
+                        Delete();
+
+                        setState(() {
+                        });
+                        Fluttertoast.showToast(msg: "Delete Successfully",);
+
+                      },child: new Text("Ok")),
+
+                ],
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Delete()async{
+
+    await Firestore.instance.collection('postings').document(_posting.id).delete();
+  }
+
+
   @override
   void initState() {
     this._posting = widget.posting;
@@ -334,26 +402,67 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.all(15.0),
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: AutoSizeText(
-          _posting.name,
-          maxLines: 2,
-          minFontSize: 20.0,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: ListTile(
+            contentPadding: EdgeInsets.all(15.0),
+            leading: CircleAvatar(backgroundImage: _posting.displayImages.first==null?Text(""):_posting.displayImages.first,
+            radius: 30,),
+
+            title: Text(_posting.address,  style: TextStyle(fontSize: 18,
+                fontWeight: FontWeight.bold,color: Colors.black
+            ),),
+            subtitle:   Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: AutoSizeText(
+                _posting.name,
+                maxLines: 2,
+                minFontSize: 16.0,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,color: Colors.black
+                ),
+              ),
+            ),
+
           ),
         ),
-      ),
-      trailing: AspectRatio(
-        aspectRatio: 3 / 2,
-        child: Image(
-          image: _posting.displayImages.first,
-          fit: BoxFit.fitWidth,
+
+        Padding(
+          padding: const EdgeInsets.only(right: 0),
+          child: Row(mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              PopupMenuButton(
+                child: Icon(Icons.more_vert),
+                itemBuilder: (_) => <PopupMenuItem<String>>[
+                  new PopupMenuItem<String>(
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: Icon(
+                              Icons.cancel,
+                              color: Colors.red,size: 14,
+                            ),
+                          ),
+                          new Text('Remove',style: TextStyle(fontSize: 15),),
+                        ],
+                      ),  value: 'delete'),
+                ],
+                onSelected: ( value){
+
+                  if(value=="delete")
+                  {
+                    showDialog1(context,_posting.id);
+
+                  }
+                },
+              ),
+            ],
+          ),
         ),
-      ),
+
+      ],
     );
   }
 

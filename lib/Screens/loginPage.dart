@@ -7,6 +7,7 @@ import 'guestHomePage.dart';
 import 'signUpPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'forgotpassword.dart';
+import 'package:hotel_hunter/Loading.dart';
 
 
 enum AuthFormType { signIn, signUp, reset }
@@ -25,6 +26,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
+
 
   AuthFormType authFormType;
 
@@ -48,13 +52,14 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState.validate()) {
       String email = _emailController.text;
       String password = _passwordController.text;
-      FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       ).then((firebaseUser) {
         String userID = firebaseUser.user.uid;
         AppConstants.currentUser = User(id: userID);
-        AppConstants.currentUser.getPersonalInfoFromFirestore().whenComplete(() {
+         AppConstants.currentUser.getPersonalInfoFromFirestore().whenComplete(() {
+          Dialogs.showLoadingDialog(context);
           Navigator.pushNamed(context, GuestHomePage.routeName);
         });
 

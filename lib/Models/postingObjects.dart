@@ -17,6 +17,7 @@ class Posting {
   String description;
   String address;
   String city;
+  String state;
   String country;
   double rating;
 
@@ -32,7 +33,7 @@ class Posting {
   Map<String, int> bathrooms;
 
   Posting({this.id="", this.name="", this.type="", this.price=0, this.description="",
-    this.address="", this.city="", this.country="", this.host
+    this.address="", this.state="", this.city="", this.country="", this.host
   }) {
     this.imageNames = [];
     this.displayImages = [];
@@ -50,12 +51,14 @@ class Posting {
   }
 
   void getPostingInfoFromSnapshot(DocumentSnapshot snapshot) {
+
     this.address = snapshot['address'] ?? "";
     this.amenities = List<String>.from(snapshot['amenities']) ?? [];
     this.bathrooms = Map<String, int>.from(snapshot['bathrooms']) ?? {};
     this.beds = Map<String, int>.from(snapshot['beds']) ?? {};
     this.city = snapshot['city'] ?? "";
     this.country = snapshot['country'] ?? "";
+    this.state = snapshot['state'] ?? "";
     this.description = snapshot['description'] ?? "";
 
     String hostID = snapshot['hostID'] ?? "";
@@ -77,6 +80,7 @@ class Posting {
     "beds": this.beds,
     "city": this.city,
     "country": this.country,
+      "state": this.state,
     "description": this.description,
       "hostID": AppConstants.currentUser.id,
       "imageNames": this.imageNames,
@@ -99,6 +103,7 @@ class Posting {
       "beds": this.beds,
       "city": this.city,
       "country": this.country,
+      "state": this.state,
       "description": this.description,
       "hostID": AppConstants.currentUser.id,
       "imageNames": this.imageNames,

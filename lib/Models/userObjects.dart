@@ -26,8 +26,11 @@ class Contact {
 
   Future<MemoryImage> getImageFromStorage() async {
     if (displayImage != null) { return displayImage; }
-    final String imagePath = "userImages/${this.id}/profile_pic.jpg";
-    final imageData = await FirebaseStorage.instance.ref().child(imagePath).getData(4000*3099);
+    else{
+      CircleAvatar(child: Image.asset('assets/images/defaultAvatar'),);
+    }
+    //final String imagePath = "userImages/${this.id}/profile_pic.jpg";
+    final imageData = await FirebaseStorage.instance.ref().child('userImages/${this.id}/profile_pic.jpg').getData(5000*5000);
     this.displayImage = MemoryImage(imageData);
     return this.displayImage;
   }
@@ -54,6 +57,7 @@ class User extends Contact {
   String bio;
   String city;
   String country;
+  String state;
   bool isHost;
   bool isCurrentlyHosting;
   String password;
@@ -65,7 +69,7 @@ class User extends Contact {
   List<Posting> myPostings;
 
   User({String id="", String firstName = "", String lastName = "", MemoryImage displayImage,
-    this.email = "", this.bio = "", this.city = "", this.country = ""
+    this.email = "", this.bio = "", this.state = "", this.city = "", this.country = ""
   }):
         super(id: id, firstName: firstName, lastName: lastName, displayImage: displayImage) {
     this.isHost = false;
@@ -86,6 +90,8 @@ class User extends Contact {
     this.bio = snapshot['bio'] ?? "";
     this.city = snapshot['city'] ?? "";
     this.country = snapshot['country'] ?? "";
+    this.state = snapshot['state'] ?? "";
+
     this.isHost = snapshot['isHost'] ?? false;
 
     //List<String> conversationIDs = List<String>.from(snapshot['conversationIDs']) ?? [];
@@ -128,6 +134,7 @@ class User extends Contact {
       "bio": this.bio,
       "city": this.city,
       "country": this.country,
+      "state": this.state,
       "email": this.email,
       "firstName": this.firstName,
       "isHost": false,
@@ -143,6 +150,8 @@ class User extends Contact {
       "bio": this.bio,
       "city": this.city,
       "country": this.country,
+      "state": this.state,
+      "email": this.email,
       "firstName": this.firstName,
       "lastName": this.lastName,
     };
@@ -150,6 +159,8 @@ class User extends Contact {
   }
 
   Future<void> addImageToFirestore(File imageFile) async {
+    final String imagePath = "userImages/${this.id}/profile_pic.jpg";
+
     StorageReference reference = FirebaseStorage.instance.ref().child('userImages/${this.id}/profile_pic.jpg');
     await reference.putFile(imageFile).onComplete;
 
@@ -166,7 +177,7 @@ class User extends Contact {
       "Profile": "$path1",
       "Changeg At": Timestamp.now(),
     });
-    AppConstants.currentUser.displayImage = path1;
+   // AppConstants.currentUser.displayImage = path1;
 
 
     this.displayImage = MemoryImage(imageFile.readAsBytesSync());

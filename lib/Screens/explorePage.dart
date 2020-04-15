@@ -57,6 +57,13 @@ class _ExplorePageState extends State<ExplorePage> {
               padding: const EdgeInsets.only(top: 10, bottom: 10.0),
               child: TextField(
                 decoration: InputDecoration(
+                  suffixIcon: GestureDetector(onTap:(){
+                    Future.delayed(Duration(milliseconds: 50), () {
+                      _controller.clear();
+
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    });
+                  },child: Icon(Icons.clear)),
                   hintText: 'Search',
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(

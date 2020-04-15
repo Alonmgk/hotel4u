@@ -4,9 +4,10 @@ import 'package:hotel_hunter/Models/appConstants.dart';
 import 'package:hotel_hunter/Models/data.dart';
 import 'package:hotel_hunter/Models/userObjects.dart';
 import 'guestHomePage.dart';
+import 'loginPage.dart';
 import 'signUpPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:hotel_hunter/Loading.dart';
 
 enum AuthFormType { signIn, signUp, reset }
 
@@ -27,7 +28,10 @@ class _ForgotpasswordState extends State<Forgotpassword> {
 
 
   Future sendPasswordResetEmail(String email) async {
-    return FirebaseAuth.instance.sendPasswordResetEmail(email: email).
+    return FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((forgot){
+      Fluttertoast.showToast(msg: "Link Sent to Email-Id",);
+      //Navigator.pushNamed(context, LoginPage.routeName);
+    }).
     catchError((e){
       Fluttertoast.showToast(msg: "Email-id Not Exist",);
 

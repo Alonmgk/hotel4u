@@ -12,7 +12,7 @@ class AppBarText extends StatelessWidget {
       text,
       style: TextStyle(
         color: Colors.white,
-        fontSize: 25.0,
+        fontSize: 20.0,
       ),
     );
   }
