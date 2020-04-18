@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _login() async{
+  void _login()async{
     if (_formKey.currentState.validate()) {
       String email = _emailController.text;
       String password = _passwordController.text;

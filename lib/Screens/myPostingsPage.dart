@@ -19,6 +19,16 @@ class MyPostingsPage extends StatefulWidget {
 class _MyPostingsPageState extends State<MyPostingsPage> {
 
   @override
+  void initState() {
+    // TODO: implement initState
+    //AppConstants.currentUser.getMyPostingsFromFirestore();
+    //AppConstants.currentUser.getPersonalInfoFromFirestore();
+    print(AppConstants.currentUser.myPostings.length);
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(

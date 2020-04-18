@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_hunter/Models/appConstants.dart';
+import 'package:hotel_hunter/Screens/accountPage.dart';
 import 'package:hotel_hunter/Screens/myPostingsPage.dart';
 import 'package:hotel_hunter/Screens/viewPostingPage.dart';
 import 'package:hotel_hunter/Views/listWidgets.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         Forgotpassword.routeName: (context) => Forgotpassword(),
         MyPostingListTile.routeName: (context) => MyPostingListTile(),
         MyPostingsPage.routeName: (context) => MyPostingsPage(),
+        AccountPage.routeName:(context) => AccountPage(),
       },
     );
   }

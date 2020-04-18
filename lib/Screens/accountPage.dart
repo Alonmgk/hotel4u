@@ -10,6 +10,8 @@ import 'viewProfilePage.dart';
 
 class AccountPage extends StatefulWidget {
 
+  static final String routeName = '/Accountpageroute';
+
   AccountPage({Key key}) : super(key: key);
 
   @override

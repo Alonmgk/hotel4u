@@ -332,6 +332,7 @@ class MyPostingListTile extends StatefulWidget {
 class _MyPostingListTileState extends State<MyPostingListTile> {
 
   Posting _posting;
+  int index;
 
   void showDialog1(BuildContext context,String id) {
     // flutter defined function
@@ -361,16 +362,18 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
                   GestureDetector(
                       onTap: ()async{
 
-                        AppConstants.currentUser.getPersonalInfoFromFirestore()
+                        /*AppConstants.currentUser.getMyPostingsFromFirestore()
                             .whenComplete(() {
 
-                          Navigator.pushNamed(context, GuestHomePage.routeName);
-                        });
+                          Navigator.pushNamed(context, HostHomePage.routeName);
+                        });*/
                         //print(AppConstants.currentUser.getMyPostingsFromFirestore());
                         //Navigator.pushNamed(context, MyPostingsPage.routeName);
-                        Delete();
 
+                        Navigator.pushNamed(context, HostHomePage.routeName);
+                        //AppConstants.currentUser.myPostings.removeAt(index).id.toString();
                         setState(() {
+                          Delete();
                         });
                         Fluttertoast.showToast(msg: "Delete Successfully",);
 
@@ -391,6 +394,11 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
   Delete()async{
 
     await Firestore.instance.collection('postings').document(_posting.id).delete();
+    AppConstants.currentUser.myPostings.removeAt(index);
+    setState(() {
+
+    });
+
   }
 
 

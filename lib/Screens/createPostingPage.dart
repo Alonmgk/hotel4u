@@ -4,7 +4,10 @@ import 'package:hotel_hunter/Models/postingObjects.dart';
 import 'package:hotel_hunter/Views/textWidgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../Loading.dart';
 import 'hostHomePage.dart';
+import 'dart:io';
+
 import 'myPostingsPage.dart';
 
 class CreatePostingPage extends StatefulWidget {
@@ -81,6 +84,8 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
       posting.reviews = [];
       posting.addPostingInfoToFirestore().whenComplete(() {
         posting.addImagesToFirestore().whenComplete(() {
+          Dialogs.showLoadingDialog(context);
+
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HostHomePage(index: 1,)),
@@ -165,7 +170,7 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.clear),
-            onPressed: () {},
+            onPressed: () {_setUpInitialValues();},
           ),
           IconButton(
             icon: Icon(Icons.save),
@@ -334,8 +339,7 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
                           textCapitalization: TextCapitalization.words,
                         ),
                       ),
-                      _countryController.text=="United States" ||
-                          _countryController.text=="US"?
+
                       Padding(
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
@@ -354,7 +358,7 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
                           },
                           textCapitalization: TextCapitalization.words,
                         ),
-                      ):Text(""),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
@@ -522,6 +526,7 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
                                 },
                               );
                             }
+
                             return MaterialButton(
                               onPressed: () {
                                 _selectImage(index);

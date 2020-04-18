@@ -299,7 +299,7 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
                             icon: BitmapDescriptor.defaultMarker,
                           ),
                         },
-                      ):CircularProgressIndicator()
+                      ):Center(child: CircularProgressIndicator())
                     ),
                   ),
                   Text(
