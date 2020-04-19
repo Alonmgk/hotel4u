@@ -336,7 +336,7 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
 
   void showDialog1(BuildContext context,String id) {
     // flutter defined function
-    showDialog(
+    showDialog(barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
@@ -344,40 +344,19 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
           title: new Text("Delete"),
           content: new Text("Are you sure want to delete the selected Posting?"),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
+
+            FlatButton(
               child: Row(
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(
-                        right: 50
+                        right: 20
                     ),
-                    child: GestureDetector(
+                    child:  GestureDetector(
                         onTap: (){
                           Navigator.of(context).pop();
                         },child: new Text("Cancel")),
-
                   ),
-
-                  GestureDetector(
-                      onTap: ()async{
-
-                        /*AppConstants.currentUser.getMyPostingsFromFirestore()
-                            .whenComplete(() {
-
-                          Navigator.pushNamed(context, HostHomePage.routeName);
-                        });*/
-                        //print(AppConstants.currentUser.getMyPostingsFromFirestore());
-                        //Navigator.pushNamed(context, MyPostingsPage.routeName);
-
-                        Navigator.pushNamed(context, HostHomePage.routeName);
-                        //AppConstants.currentUser.myPostings.removeAt(index).id.toString();
-                        setState(() {
-                          Delete();
-                        });
-                        Fluttertoast.showToast(msg: "Delete Successfully",);
-
-                      },child: new Text("Ok")),
 
                 ],
               ),
@@ -385,6 +364,39 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
                 Navigator.of(context).pop();
               },
             ),
+
+            FlatButton(
+              child: Row(
+                children: <Widget>[
+
+                  new Text("Ok"),
+                ],
+              ),
+              onPressed: () async{
+                await  Delete();
+                print(AppConstants.currentUser.id);
+                print(AppConstants.currentUser.myPostings);
+                //await AppConstants.currentUser.getMyPostingsFromFirestore();
+                // await AppConstants.currentUser.getPersonalInfoFromFirestore();
+                /*AppConstants.currentUser.getMyPostingsFromFirestore()
+                            .whenComplete(() {
+
+                          Navigator.pushNamed(context, HostHomePage.routeName);
+                        });*/
+                //print(AppConstants.currentUser.getMyPostingsFromFirestore());
+                //Navigator.pushNamed(context, MyPostingsPage.routeName);
+
+                Navigator.pushReplacementNamed(context, HostHomePage.routeName);
+                //AppConstants.currentUser.myPostings.removeAt(index).id.toString();
+                setState(() {
+
+
+                });
+                Fluttertoast.showToast(msg: "Delete Successfully",);
+              },
+            ),
+            // usually buttons at the bottom of the dialog
+
           ],
         );
       },
@@ -394,7 +406,34 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
   Delete()async{
 
     await Firestore.instance.collection('postings').document(_posting.id).delete();
-    AppConstants.currentUser.myPostings.removeAt(index);
+
+    DocumentReference dr = Firestore.instance.document('users/${AppConstants.currentUser.id}');
+
+    Firestore.instance.runTransaction((Transaction ts)async{
+
+      DocumentSnapshot postSnapshot=await ts.get(dr);
+
+      /*if (doc['upvoters'].contains('12345')) {
+        await tx.update(snapshot.reference, <String, dynamic>{
+          'upvoters': FieldValue.arrayRemove(['12345'])
+        });
+      }
+*/
+      if (postSnapshot.exists) {
+
+        if(postSnapshot.data['myPostingIDs'].contains(_posting.id))
+
+        await ts.update(dr, <String, dynamic>{
+          'myPostingIDs': FieldValue.arrayRemove([_posting.id])});
+      }
+
+    });
+
+     AppConstants.currentUser.myPostings.clear();
+  await AppConstants.currentUser.getMyPostingsFromFirestore();
+  Navigator.of(context).pop();
+    Navigator.pushReplacementNamed(context, HostHomePage.routeName);
+
     setState(() {
 
     });

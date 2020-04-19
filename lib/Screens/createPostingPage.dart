@@ -45,6 +45,16 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
   Map<String, int> _bathrooms;
   List<MemoryImage> _images;
 
+
+  clear(){
+
+    _images.clear();
+
+    setState(() {
+
+    });
+  }
+
   void _selectImage(int index) async {
     var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (imageFile != null) {
@@ -58,10 +68,10 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
     }
   }
 
-  void _savePosting() {
+   _savePosting() {
     if (!_formKey.currentState.validate()) { return; }
     if (_houseType == null) { return; }
-    if (_images.isEmpty) { return; }
+    if (_images.isEmpty) { return Fluttertoast.showToast(msg: "Please upload image");}
 
     Posting posting = Posting();
     posting.name = _nameController.text;
@@ -83,6 +93,8 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
       posting.bookings = [];
       posting.reviews = [];
       posting.addPostingInfoToFirestore().whenComplete(() {
+        Dialogs.showLoadingDialog(context);
+
         posting.addImagesToFirestore().whenComplete(() {
           Dialogs.showLoadingDialog(context);
 
@@ -519,13 +531,23 @@ class _CreatePostingPageState extends State<CreatePostingPage> {
                           ),
                           itemBuilder: (context, index) {
                             if (index == _images.length) {
-                              return IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () {
-                                  _selectImage(-1);
-                                },
+                              return Row(
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Icon(Icons.add),
+                                    onPressed: () {
+                                      _selectImage(-1);
+                                    },
+                                  ),
+                                        IconButton(icon: Icon(Icons.remove), onPressed: (){
+
+                                        clear();
+                                            },)
+                            ],
                               );
                             }
+
+
 
                             return MaterialButton(
                               onPressed: () {

@@ -56,10 +56,12 @@ class _LoginPageState extends State<LoginPage> {
         email: email,
         password: password,
       ).then((firebaseUser) {
+        Dialogs.showLoadingDialog(context);
+
         String userID = firebaseUser.user.uid;
         AppConstants.currentUser = User(id: userID);
          AppConstants.currentUser.getPersonalInfoFromFirestore().whenComplete(() {
-          Dialogs.showLoadingDialog(context);
+          //Dialogs.showLoadingDialog(context);
           Navigator.pushNamed(context, GuestHomePage.routeName);
         });
 
@@ -87,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Welcome to ${AppConstants.appName}!',
+                  'Welcome to ${AppConstants.appName}',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30.0,

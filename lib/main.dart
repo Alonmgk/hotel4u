@@ -87,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.pushNamed(context, GuestHomePage.routeName);
 
           });
-          //Navigator.pushNamedAndRemoveUntil(context, "/Home", (Route<dynamic> route) => false);
         }
       } else {
         Navigator.pushNamed(context, LoginPage.routeName);
@@ -99,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
 
+    getLogin();
     Timer(Duration(seconds: 2), () {
       Navigator.pushNamed(context, LoginPage.routeName);
     });
