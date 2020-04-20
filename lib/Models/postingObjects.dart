@@ -127,7 +127,7 @@ class Posting {
     this.displayImages = [];
     for(int i = 0; i < this.imageNames.length; i++) {
       final String imagePath = "postingImages/${this.id}/${this.imageNames[i]}";
-      final imageData = await FirebaseStorage.instance.ref().child(imagePath).getData(1024*1024);
+      final imageData = await FirebaseStorage.instance.ref().child(imagePath).getData(3000*3000);
       this.displayImages.add(MemoryImage(imageData));
     }
     return this.displayImages;
