@@ -118,7 +118,7 @@ class Posting {
   Future<MemoryImage> getFirstImageFromStorage() async {
     if (this.displayImages.isNotEmpty) { return this.displayImages.first; }
     final String imagePath = "postingImages/${this.id}/${this.imageNames.first}";
-    final imageData = await FirebaseStorage.instance.ref().child(imagePath).getData(1024*1024);
+    final imageData = await FirebaseStorage.instance.ref().child(imagePath).getData(3000*3000);
     this.displayImages.add(MemoryImage(imageData));
     return this.displayImages.first;
   }
