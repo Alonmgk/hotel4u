@@ -37,7 +37,7 @@ class _PostingGridTileState extends State<PostingGridTile> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         AspectRatio(
-          aspectRatio: 3/2,
+          aspectRatio: 6/2,
           child: (this._posting.displayImages.isEmpty) ? Container() : Container(
             decoration: BoxDecoration(
               image: DecorationImage(
