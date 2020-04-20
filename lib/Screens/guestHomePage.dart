@@ -53,27 +53,29 @@ class _GuestHomePageState extends State<GuestHomePage> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: AppBarText(text: _pageTitles[_selectedIndex]),
-        automaticallyImplyLeading: false,
-      ),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem> [
-          _buildNavigationItem(0, Icons.search, _pageTitles[0]),
-          _buildNavigationItem(1, Icons.favorite_border, _pageTitles[1]),
-          _buildNavigationItem(2, Icons.hotel, _pageTitles[2]),
-          _buildNavigationItem(3, Icons.message, _pageTitles[3]),
-          _buildNavigationItem(4, Icons.person_outline, _pageTitles[4]),
-        ],
+    return WillPopScope(onWillPop: ()async =>false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: AppBarText(text: _pageTitles[_selectedIndex]),
+          automaticallyImplyLeading: false,
+        ),
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          currentIndex: _selectedIndex,
+          type: BottomNavigationBarType.fixed,
+          items: <BottomNavigationBarItem> [
+            _buildNavigationItem(0, Icons.search, _pageTitles[0]),
+            _buildNavigationItem(1, Icons.favorite_border, _pageTitles[1]),
+            _buildNavigationItem(2, Icons.hotel, _pageTitles[2]),
+            _buildNavigationItem(3, Icons.message, _pageTitles[3]),
+            _buildNavigationItem(4, Icons.person_outline, _pageTitles[4]),
+          ],
+        ),
       ),
     );
   }

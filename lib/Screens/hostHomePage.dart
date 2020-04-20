@@ -61,26 +61,28 @@ int _selectedIndex = 3;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: AppBarText(text: _pageTitles[_selectedIndex]),
-        automaticallyImplyLeading: false,
-      ),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem> [
-          _buildNavigationItem(0, Icons.calendar_today, _pageTitles[0]),
-          _buildNavigationItem(1, Icons.home, _pageTitles[1]),
-          _buildNavigationItem(2, Icons.message, _pageTitles[2]),
-          _buildNavigationItem(3, Icons.person_outline, _pageTitles[3]),
-        ],
+    return WillPopScope(onWillPop: ()async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: AppBarText(text: _pageTitles[_selectedIndex]),
+          automaticallyImplyLeading: false,
+        ),
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          currentIndex: _selectedIndex,
+          type: BottomNavigationBarType.fixed,
+          items: <BottomNavigationBarItem> [
+            _buildNavigationItem(0, Icons.calendar_today, _pageTitles[0]),
+            _buildNavigationItem(1, Icons.home, _pageTitles[1]),
+            _buildNavigationItem(2, Icons.message, _pageTitles[2]),
+            _buildNavigationItem(3, Icons.person_outline, _pageTitles[3]),
+          ],
+        ),
       ),
     );
   }
