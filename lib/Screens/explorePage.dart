@@ -19,7 +19,7 @@ class _ExplorePageState extends State<ExplorePage> {
   TextEditingController _controller = TextEditingController();
   Stream _stream = Firestore.instance.collection('postings').snapshots();
   String _searchType = "";
-  bool _isNameButtonSelected = false;
+  bool _isCountryButtonSelected = false;
   bool _isCityButtonSelected = false;
   bool _isTypeButtonSelected = false;
 
@@ -33,9 +33,9 @@ class _ExplorePageState extends State<ExplorePage> {
     setState(() {});
   }
 
-  void _pressSearchByButton(String searchType, bool isNameSelected, bool isCitySelected, bool isTypeSelected) {
+  void _pressSearchByButton(String searchType, bool isCountrySelected, bool isCitySelected, bool isTypeSelected) {
     _searchType = searchType;
-    _isNameButtonSelected = isNameSelected;
+    _isCountryButtonSelected = isCountrySelected;
     _isCityButtonSelected = isCitySelected;
     _isTypeButtonSelected = isTypeSelected;
     setState(() {});
@@ -89,11 +89,11 @@ class _ExplorePageState extends State<ExplorePage> {
                   Expanded(
                     child: MaterialButton(
                       onPressed: () {
-                        _pressSearchByButton("name", true, false, false);
+                        _pressSearchByButton("country", true, false, false);
                       },
-                      child: Text('Name'),
+                      child: Text('Country'),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      color: _isNameButtonSelected ? Colors.grey : Colors.white,
+                      color: _isCountryButtonSelected ? Colors.grey : Colors.white,
                     ),
                   ),
                   SizedBox(width: 5,),

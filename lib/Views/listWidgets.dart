@@ -375,8 +375,9 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
               onPressed: () async{
                 await  Delete();
                 print(AppConstants.currentUser.id);
-                print(AppConstants.currentUser.myPostings);
-                //await AppConstants.currentUser.getMyPostingsFromFirestore();
+                Fluttertoast.showToast(msg: "Delete Successfully",);
+
+
                 // await AppConstants.currentUser.getPersonalInfoFromFirestore();
                 /*AppConstants.currentUser.getMyPostingsFromFirestore()
                             .whenComplete(() {
@@ -388,11 +389,7 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
 
                 Navigator.pushReplacementNamed(context, HostHomePage.routeName);
                 //AppConstants.currentUser.myPostings.removeAt(index).id.toString();
-                setState(() {
 
-
-                });
-                Fluttertoast.showToast(msg: "Delete Successfully",);
               },
             ),
             // usually buttons at the bottom of the dialog
@@ -413,12 +410,7 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
 
       DocumentSnapshot postSnapshot=await ts.get(dr);
 
-      /*if (doc['upvoters'].contains('12345')) {
-        await tx.update(snapshot.reference, <String, dynamic>{
-          'upvoters': FieldValue.arrayRemove(['12345'])
-        });
-      }
-*/
+
       if (postSnapshot.exists) {
 
         if(postSnapshot.data['myPostingIDs'].contains(_posting.id))
@@ -429,14 +421,54 @@ class _MyPostingListTileState extends State<MyPostingListTile> {
 
     });
 
-     AppConstants.currentUser.myPostings.clear();
-  await AppConstants.currentUser.getMyPostingsFromFirestore();
-  Navigator.of(context).pop();
+     //AppConstants.currentUser.myPostings.clear();
+
+    for(int i=0;i<AppConstants.currentUser.myPostings.length;i++){
+
+      if(AppConstants.currentUser.myPostings[i].id==_posting.id){
+        AppConstants.currentUser.myPostings.removeAt(i);
+      }
+
+    }
+setState(() {
+
+});
+
+
+
+      Navigator.of(context).pop();
+    Navigator.pushReplacementNamed(context,MyPostingsPage.routeName);
+
+      //Navigator.of(context).pop();
+
+     // Navigator.pushReplacementNamed(context,MyPostingsPage.routeName);
+
+
+
+ // await AppConstants.currentUser.myPostings[0].getPostingInfoFromFirestore();
+
+  /*  DocumentSnapshot ds = await Firestore.instance.document('users/${AppConstants.currentUser.id}').get();
+
+    List<String> myPostingIDs = List<String>.from(ds.data['myPostingIDs']) ?? [];
+
+    print("Ids : ${ds.data['myPostingIDs']}");
+    print("Ids : $myPostingIDs");
+
+    for (int i =0;i<myPostingIDs.length;i++) {
+    //  DocumentSnapshot snapshot = await Firestore.instance.collection('postings').document(myPostingIDs[i]).get();
+      Posting newPosting = await Posting(id: myPostingIDs[i]);
+      await newPosting.getPostingInfoFromFirestore();
+      await newPosting.getAllBookingsFromFirestore();
+      await newPosting.getAllImagesFromStorage();
+      AppConstants.currentUser.myPostings.add(newPosting);
+    }*/
+/*
+ Navigator.of(context).pop();
     Navigator.pushReplacementNamed(context, HostHomePage.routeName);
 
     setState(() {
 
-    });
+    });*/
 
   }
 

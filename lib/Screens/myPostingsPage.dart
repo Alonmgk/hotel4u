@@ -24,6 +24,9 @@ class _MyPostingsPageState extends State<MyPostingsPage> {
     //AppConstants.currentUser.getMyPostingsFromFirestore();
     //AppConstants.currentUser.getPersonalInfoFromFirestore();
     print(AppConstants.currentUser.myPostings.length);
+    print(AppConstants.currentUser.id);
+    print(AppConstants.currentUser.firstName);
+
     super.initState();
   }
 
